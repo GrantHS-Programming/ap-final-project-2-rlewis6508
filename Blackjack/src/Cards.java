@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-
 public class Cards {
     private String suit;
     private String value;
@@ -13,7 +12,6 @@ public class Cards {
     public String getSuit() {
         return suit;
     }
-
     public String getValue() {
         return value;
     }
@@ -21,25 +19,25 @@ public class Cards {
     //creates a full deck of cards
     public static ArrayList<Cards> createDeck() {
         ArrayList<String> suits = new ArrayList<String>();
-        suits.add("HEARTS");
-        suits.add("DIAMONDS");
-        suits.add("CLUBS");
-        suits.add("SPADES");
+        suits.add("Hearts");
+        suits.add("Diamonds");
+        suits.add("Clubs");
+        suits.add("Spades");
 
         ArrayList<String> values = new ArrayList<String>();
-        values.add("ACE");
-        values.add("TWO");
-        values.add("THREE");
-        values.add("FOUR");
-        values.add("FIVE");
-        values.add("SIX");
-        values.add("SEVEN");
-        values.add("EIGHT");
-        values.add("NINE");
-        values.add("TEN");
-        values.add("JACK");
-        values.add("QUEEN");
-        values.add("KING");
+        values.add("Ace");
+        values.add("Two");
+        values.add("Three");
+        values.add("Four");
+        values.add("Five");
+        values.add("Six");
+        values.add("Seven");
+        values.add("Eight");
+        values.add("Nine");
+        values.add("Ten");
+        values.add("Jack");
+        values.add("Queen");
+        values.add("King");
 
         ArrayList<Cards> deck = new ArrayList<Cards>();
         for (String suit : suits) {
