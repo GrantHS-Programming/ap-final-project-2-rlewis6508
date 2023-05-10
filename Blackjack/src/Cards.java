@@ -1,8 +1,7 @@
 import java.util.ArrayList;
-import java.util.Collections;
 public class Cards {
-    private String suit;
-    private String value;
+    private final String suit;
+    private final String value;
 
     public Cards(String suit, String value) {
         this.suit = suit;
@@ -16,36 +15,53 @@ public class Cards {
         return value;
     }
 
+    public int getNumericValue() {
+        int numericValue = Integer.parseInt(value);
+        if (value.equals("A")){
+            return 11;
+        }
+        else if (value.equals("K") || value.equals("Q") || value.equals("J") || value.equals("10")){
+            return 10;
+        }
+        else {
+            if (numericValue > 10){
+                numericValue = 10;
+            }
+        }
+        return numericValue;
+    }
+
     //creates a full deck of cards
     public static ArrayList<Cards> createDeck() {
-        ArrayList<String> suits = new ArrayList<String>();
+        ArrayList<Cards> deck = new ArrayList<>();
+
+        ArrayList<String> suits = new ArrayList<>();
         suits.add("Hearts");
         suits.add("Diamonds");
         suits.add("Clubs");
         suits.add("Spades");
 
-        ArrayList<String> values = new ArrayList<String>();
-        values.add("Ace");
-        values.add("Two");
-        values.add("Three");
-        values.add("Four");
-        values.add("Five");
-        values.add("Six");
-        values.add("Seven");
-        values.add("Eight");
-        values.add("Nine");
-        values.add("Ten");
-        values.add("Jack");
-        values.add("Queen");
-        values.add("King");
+        ArrayList<String> values = new ArrayList<>();
+        values.add("1");
+        values.add("2");
+        values.add("3");
+        values.add("4");
+        values.add("5");
+        values.add("6");
+        values.add("7");
+        values.add("8");
+        values.add("9");
+        values.add("10");
+        values.add("J");
+        values.add("Q");
+        values.add("K");
+        values.add("A");
 
-        ArrayList<Cards> deck = new ArrayList<Cards>();
         for (String suit : suits) {
             for (String value : values) {
                 deck.add(new Cards(suit, value));
             }
         }
-        Collections.shuffle(deck);
         return deck;
     }
 }
