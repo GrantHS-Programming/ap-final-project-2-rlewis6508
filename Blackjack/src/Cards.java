@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Cards {
     private final String suit;
     private final String value;
-
+    Scanner sc = new Scanner(System.in);
     public Cards(String suit, String value) {
         this.suit = suit;
         this.value = value;
@@ -18,7 +20,14 @@ public class Cards {
     public int getNumericValue() {
         int numericValue = Integer.parseInt(value);
         if (value.equals("A")){
-            return 11;
+            System.out.println("You have an Ace in your hand, would you like it to have a value of 1 or 11?");
+            int ans = sc.nextInt();
+            if (ans == 1){
+                return 1;
+            }
+            else if (ans == 11){
+                return 11;
+            }
         }
         else if (value.equals("K") || value.equals("Q") || value.equals("J") || value.equals("10")){
             return 10;

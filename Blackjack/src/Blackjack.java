@@ -55,11 +55,25 @@ public class Blackjack {
             System.out.println("Dealer stays.\n");
         }
 
+        System.out.println();
+
         for (int i = 0; i < hands.size(); i++) {
             ArrayList<Cards> hand = hands.get(i);
             int handValue = getHandValue(hand);
-        }
 
+            if (handValue > 21) {
+                System.out.println("Player " + (i + 1) + " busts.");
+            }
+            else if (handValue == dealerHandValue) {
+                System.out.println("Player + " + (i + 1) + " pushed with the dealer.");
+            }
+            else if (handValue > dealerHandValue || dealerHandValue > 21) {
+                System.out.println("Player " + (i + 1) + " wins!");
+            }
+            else {
+                System.out.println("Player " + (i + 1) + " loses.");
+            }
+        }
     }
 
 
@@ -87,6 +101,7 @@ public class Blackjack {
         return hands;
     }
 
+    //deals cards to the dealer
     public ArrayList<Cards> dealer(ArrayList<Cards> deck){
         ArrayList<Cards> dealerHand = new ArrayList<>();
 
@@ -97,21 +112,21 @@ public class Blackjack {
         return dealerHand;
     }
 
+    //gets the value of player x hand
     public int getHandValue(ArrayList<Cards> hand){
         int value = 0;
         int numAces = 0;
         for (Cards card : hand) {
             int cardValue = card.getNumericValue();
-            if (cardValue == 1) {
+            if (cardValue == 1 || cardValue == 11) {
                 numAces++;
             }
             value += cardValue;
         }
-        while (numAces > 0 && value <12) {
+        while (numAces > 0 && value < 12) {
             value+= 10;
             numAces--;
         }
         return value;
     }
-
 }
