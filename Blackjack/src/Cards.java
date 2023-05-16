@@ -18,26 +18,28 @@ public class Cards {
     }
 
     public int getNumericValue() {
-        int numericValue = Integer.parseInt(value);
-        if (value.equals("A")){
+        if (value.equals("A")) {
             System.out.println("You have an Ace in your hand, would you like it to have a value of 1 or 11?");
-            int ans = sc.nextInt();
-            if (ans == 1){
+            int aceValue = sc.nextInt();
+            if (aceValue == 11) {
+                return 11;
+            } else if (aceValue == 1) {
                 return 1;
             }
-            else if (ans == 11){
-                return 11;
-            }
-        }
-        else if (value.equals("K") || value.equals("Q") || value.equals("J") || value.equals("10")){
+        } else if (value.equals("K") || value.equals("Q") || value.equals("J") || value.equals("10")) {
             return 10;
-        }
-        else {
-            if (numericValue > 10){
-                numericValue = 10;
+        } else {
+            try {
+                int numericValue = Integer.parseInt(value);
+                if (numericValue >= 2 && numericValue <= 9) {
+                    return numericValue;
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Invalid card value: " + value);
             }
         }
-        return numericValue;
+        return 0;
     }
 
     //creates a full deck of cards

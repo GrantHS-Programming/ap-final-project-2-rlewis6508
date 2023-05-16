@@ -22,6 +22,7 @@ public class Blackjack {
         ArrayList<ArrayList<Cards>> hands = deal(numPlayers, deck);
         ArrayList<Cards> dealerHand = dealer(deck);
 
+        //prints each player's cards and value of hand
         for (int i = 0; i < hands.size(); i++) {
             System.out.println("Player " + (i + 1) + "'s hand: ");
             ArrayList<Cards> hand = hands.get(i);
@@ -33,6 +34,7 @@ public class Blackjack {
             System.out.println();
         }
 
+        //prints the dealers cards and value of hand
         System.out.println("Dealer's hand: ");
         for (Cards card : dealerHand){
             System.out.println(card.getValue() + " of " + card.getSuit());
@@ -40,6 +42,28 @@ public class Blackjack {
         int dealerHandValue = getHandValue(dealerHand);
         System.out.println("Dealer's hand value: " + dealerHandValue);
 
+        //hit or stay
+        System.out.println("\nWould you like to draw another card (hit) or stay with your current hand? h/s");
+        String hit = sc.nextLine();
+        //deals another card
+        if (hit.equalsIgnoreCase("h")){
+            Cards card = deck.remove(0);
+            hands.get(0).add(card);
+            //same code as initial deal, prints the players new cards and hand value
+            for (int i = 0; i < hands.size(); i++) {
+                System.out.println("Player " + (i + 1) + "'s hand: ");
+                ArrayList<Cards> hand = hands.get(i);
+                int handValue = getHandValue(hand);
+                for (Cards cards : hand) {
+                    System.out.println(card.getValue() + " of " + card.getSuit());
+                }
+                System.out.println("Hand value: " + handValue);
+                System.out.println();
+            }
+        }
+
+
+        //if the dealers hand is less than 17, it must hit and take another card, if not
         while (dealerHandValue < 17) {
             System.out.println("Dealer has to draw another card.");
             Cards card = deck.remove(0);
@@ -52,20 +76,24 @@ public class Blackjack {
             System.out.println("The dealer busted.");
         }
         else {
-            System.out.println("Dealer stays.\n");
+            System.out.println("Dealer stays.");
         }
 
         System.out.println();
 
+        //determines who wins the hand
         for (int i = 0; i < hands.size(); i++) {
             ArrayList<Cards> hand = hands.get(i);
             int handValue = getHandValue(hand);
 
-            if (handValue > 21) {
+            if (handValue == 21){
+                System.out.println("Blackjack! You automatically win.");
+            }
+            else if (handValue > 21) {
                 System.out.println("Player " + (i + 1) + " busts.");
             }
             else if (handValue == dealerHandValue) {
-                System.out.println("Player + " + (i + 1) + " pushed with the dealer.");
+                System.out.println("Player " + (i + 1) + " pushed with the dealer.");
             }
             else if (handValue > dealerHandValue || dealerHandValue > 21) {
                 System.out.println("Player " + (i + 1) + " wins!");
@@ -76,9 +104,7 @@ public class Blackjack {
         }
     }
 
-
-
-    //shuffles the deck
+    //shuffles the deck of cards
     public void shuffle(ArrayList<Cards> deck) {
         System.out.println("\nShuffling the deck...\n");
         Collections.shuffle(deck);
@@ -91,7 +117,6 @@ public class Blackjack {
         for (int i = 0; i < numPlayers; i++) {
             hands.add(new ArrayList<>());
         }
-
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < numPlayers; j++) {
                 Cards card = deck.remove(0);
@@ -118,7 +143,7 @@ public class Blackjack {
         int numAces = 0;
         for (Cards card : hand) {
             int cardValue = card.getNumericValue();
-            if (cardValue == 1 || cardValue == 11) {
+            if (cardValue == 11) {
                 numAces++;
             }
             value += cardValue;
