@@ -4,34 +4,41 @@ import java.util.Scanner;
 public class Cards {
     private final String suit;
     private final String value;
-    Scanner sc = new Scanner(System.in);
+    private final boolean isAce;
+
     public Cards(String suit, String value) {
         this.suit = suit;
         this.value = value;
+        this.isAce = value.equals("A");
     }
 
     public String getSuit() {
         return suit;
     }
+
     public String getValue() {
         return value;
     }
 
     public int getNumericValue() {
-        if (value.equals("A")) {
-            System.out.println("You have an Ace in your hand, would you like it to have a value of 1 or 11?");
+        if (isAce) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("You have an Ace in your hand. Choose its value: 1 or 11?");
             int aceValue = sc.nextInt();
-            if (aceValue == 11) {
-                return 11;
-            } else if (aceValue == 1) {
-                return 1;
+
+            while (aceValue != 1 && aceValue != 11) {
+                System.out.println("Invalid choice. Please enter 1 or 11:");
+                aceValue = sc.nextInt();
             }
-        } else if (value.equals("K") || value.equals("Q") || value.equals("J") || value.equals("10")) {
+            return aceValue;
+        }
+        else if (value.equals("K") || value.equals("Q") || value.equals("J")) {
             return 10;
-        } else {
+        }
+        else {
             try {
                 int numericValue = Integer.parseInt(value);
-                if (numericValue >= 2 && numericValue <= 9) {
+                if (numericValue >= 2 && numericValue <= 10) {
                     return numericValue;
                 }
             }
@@ -53,7 +60,6 @@ public class Cards {
         suits.add("Spades");
 
         ArrayList<String> values = new ArrayList<>();
-        values.add("1");
         values.add("2");
         values.add("3");
         values.add("4");

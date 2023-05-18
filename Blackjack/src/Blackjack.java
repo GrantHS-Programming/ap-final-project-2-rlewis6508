@@ -13,6 +13,8 @@ public class Blackjack {
 
     //main game code, asks the user how players are playing, creates and shuffles a deck, creates and deals hands to numPlayers
     public void game() {
+        boolean game = true;
+
         System.out.println("Hello, you many players would like to play Blackjack today?");
         int numPlayers = sc.nextInt();
 
@@ -27,6 +29,7 @@ public class Blackjack {
             System.out.println("Player " + (i + 1) + "'s hand: ");
             ArrayList<Cards> hand = hands.get(i);
             int handValue = getHandValue(hand);
+            boolean playerHasBlackjack = (handValue == 21);
             for (Cards card : hand) {
                 System.out.println(card.getValue() + " of " + card.getSuit());
             }
@@ -41,53 +44,69 @@ public class Blackjack {
         }
         int dealerHandValue = getHandValue(dealerHand);
         System.out.println("Dealer's hand value: " + dealerHandValue);
+        boolean dealerHasBlackjack = (dealerHandValue == 21 && dealerHand.size() == 2 && !playerHasBlackjack);
 
         //hit or stay
         System.out.println("\nWould you like to draw another card (hit) or stay with your current hand? h/s");
-        String hit = sc.nextLine();
-        //deals another card
-        if (hit.equalsIgnoreCase("h")){
-            Cards card = deck.remove(0);
-            hands.get(0).add(card);
-            //same code as initial deal, prints the players new cards and hand value
-            for (int i = 0; i < hands.size(); i++) {
-                System.out.println("Player " + (i + 1) + "'s hand: ");
-                ArrayList<Cards> hand = hands.get(i);
-                int handValue = getHandValue(hand);
-                for (Cards cards : hand) {
+        sc.nextLine();
+        String hit = sc.nextLine().toLowerCase();
+        if (hit.equals("h")) {
+            boolean continueHitting = true;
+            while (continueHitting) {
+                Cards newCard = deck.remove(0);
+                hands.get(0).add(newCard);
+
+                System.out.println("Player 1's new card: " + newCard.getValue() + " of " + newCard.getSuit());
+
+                System.out.println("Player 1's hand:");
+                ArrayList<Cards> playerHand = hands.get(0);
+                for (Cards card : playerHand) {
                     System.out.println(card.getValue() + " of " + card.getSuit());
                 }
-                System.out.println("Hand value: " + handValue);
+
+                int handValue = getHandValue(playerHand);
+                System.out.println("Player 1's hand value: " + handValue);
+
+                if (handValue < 21) {
+                    System.out.println("\nWould you like to draw another card (hit) or stay with your current hand? h/s");
+                    String hitAgain = sc.nextLine().toLowerCase();
+
+                    if (!hitAgain.equals("h")) {
+                        continueHitting = false;
+                    }
+                }
+                else {
+                    continueHitting = false;
+                }
+
                 System.out.println();
             }
         }
 
 
-        //if the dealers hand is less than 17, it must hit and take another card, if not
-        while (dealerHandValue < 17) {
-            System.out.println("Dealer has to draw another card.");
-            Cards card = deck.remove(0);
-            dealerHand.add(card);
-            dealerHandValue = getHandValue(dealerHand);
-            System.out.println("Dealer's new hand value: " + dealerHandValue);
+        if (hit.equalsIgnoreCase("s")) {
+            //if the dealers hand is less than 17, it must hit and take another card, if not it must take another card
+            if (dealerHandValue < 17) {
+                System.out.println("Dealer has to draw another card.");
+                Cards card = deck.remove(0);
+                dealerHand.add(card);
+                dealerHandValue = getHandValue(dealerHand);
+                System.out.println("Dealer's new hand value: " + dealerHandValue);
+            }
+            else if (dealerHandValue > 21) {
+                System.out.println("The dealer busted.");
+            }
+            else {
+                System.out.println("Dealer stays.");
+            }
+            System.out.println();
         }
-
-        if (dealerHandValue > 21) {
-            System.out.println("The dealer busted.");
-        }
-        else {
-            System.out.println("Dealer stays.");
-        }
-
-        System.out.println();
-
         //determines who wins the hand
         for (int i = 0; i < hands.size(); i++) {
             ArrayList<Cards> hand = hands.get(i);
             int handValue = getHandValue(hand);
-
-            if (handValue == 21){
-                System.out.println("Blackjack! You automatically win.");
+            if (playerHasBlackjack) {
+                System.out.println("Player " + (i + 1) + " has blackjack! You automatically win.");
             }
             else if (handValue > 21) {
                 System.out.println("Player " + (i + 1) + " busts.");
