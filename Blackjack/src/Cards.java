@@ -23,7 +23,7 @@ public class Cards {
     public int getNumericValue() {
         if (isAce) {
             Scanner sc = new Scanner(System.in);
-            System.out.println("You have an Ace in your hand. Choose its value: 1 or 11?");
+            System.out.println("You have an Ace in your hand, would you like it to be worth 1 or 11?");
             int aceValue = sc.nextInt();
 
             while (aceValue != 1 && aceValue != 11) {
