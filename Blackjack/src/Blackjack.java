@@ -30,8 +30,18 @@ public class Blackjack {
 
         //prints the dealers first card and value of hand
         System.out.println("\nDealer's hand: ");
-        System.out.println(dealerHand.get(0).getValue() + " of " + dealerHand.get(0).getSuit());
-        System.out.println("Hidden Card");
+
+        if (getHandValue(dealerHand) == 21 && dealerHand.size() == 2 && getHandValue(playerHand) != 21) {
+            for (Cards card : dealerHand) {
+                System.out.println(card.getValue() + " of " + card.getSuit());
+            }
+        }
+        else {
+            System.out.println(dealerHand.get(0).getValue() + " of " + dealerHand.get(0).getSuit());
+            System.out.println("Hidden Card");
+        }
+
+        System.out.println();
 
         playerTurn(playerHand, deck);
         dealerTurn(dealerHand, deck);
