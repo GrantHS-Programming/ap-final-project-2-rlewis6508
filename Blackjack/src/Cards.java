@@ -31,18 +31,15 @@ public class Cards {
                 aceValue = sc.nextInt();
             }
             return aceValue;
-        }
-        else if (value.equals("K") || value.equals("Q") || value.equals("J")) {
+        } else if (value.equals("K") || value.equals("Q") || value.equals("J")) {
             return 10;
-        }
-        else {
+        } else {
             try {
                 int numericValue = Integer.parseInt(value);
                 if (numericValue >= 2 && numericValue <= 10) {
                     return numericValue;
                 }
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid card value: " + value);
             }
         }

@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class Blackjack {
     Scanner sc = new Scanner(System.in);
+    private int playerBet;
+
     public static void main(String[] args) {
         new Blackjack();
     }
@@ -14,6 +16,8 @@ public class Blackjack {
     //main game code, asks the user how players are playing, creates and shuffles a deck, creates and deals hands to numPlayers
     public void game() {
         System.out.println("Hello, welcome to the Blackjack tables!");
+        System.out.println("You have $100 to use, enter your bet for this round: ");
+        int playerBet = sc.nextInt();
 
         ArrayList<Cards> deck = Cards.createDeck();
         shuffle(deck);
@@ -75,6 +79,7 @@ public class Blackjack {
         //checks if player has blackjack
         if (getHandValue(playerHand) == 21 && playerHand.size() == 2) {
             System.out.println("Blackjack! You win!");
+            playerBet = playerBet * 3; //blackjack, payout 3:1
             return;
         }
 
@@ -127,6 +132,8 @@ public class Blackjack {
 
     //determines if the player or dealer won
     public void determineWinner(ArrayList<Cards> playerHand, ArrayList<Cards> dealerHand) {
+        int payout;
+
         int playerHandValue = getHandValue(playerHand);
         int dealerHandValue = getHandValue(dealerHand);
 
@@ -141,15 +148,20 @@ public class Blackjack {
         System.out.println("Hand value: " + dealerHandValue);
 
         if (playerHandValue > 21) {
-            System.out.println("You busted. Dealer wins!");
+            System.out.println("You busted. Dealer wins!"); //bust, no payout
         } else if (dealerHandValue > 21) {
             System.out.println("The dealer busted. You win!");
+            payout = playerBet * 2; //payout is 1:1
+            System.out.println("You won $" + payout);
         } else if (playerHandValue == dealerHandValue) {
-            System.out.println("It's a tie (push)!");
+            System.out.println("It's a push!");
+            System.out.println("You get back your bet amount: $" + playerBet); //player keeps bet for push
         } else if (playerHandValue > dealerHandValue) {
             System.out.println("You win!");
+            payout = playerBet * 2; //payout 1:1
+            System.out.println("You won $" + payout);
         } else {
-            System.out.println("Dealer wins!");
+            System.out.println("Dealer wins!"); //dealer won, no payout
         }
     }
 
