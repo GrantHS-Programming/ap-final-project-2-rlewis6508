@@ -5,21 +5,19 @@ public class Cards {
     private final String suit;
     private final String value;
     private final boolean isAce;
-
     public Cards(String suit, String value) {
         this.suit = suit;
         this.value = value;
         this.isAce = value.equals("A");
     }
-
     public String getSuit() {
         return suit;
     }
-
     public String getValue() {
         return value;
     }
 
+    //gets the numeric values of the cards and asks user whether they want their ace to be worth 1 or 11
     public int getNumericValue() {
         if (isAce) {
             Scanner sc = new Scanner(System.in);

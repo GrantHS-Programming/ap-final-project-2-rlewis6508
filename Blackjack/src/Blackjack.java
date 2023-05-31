@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-
 public class Blackjack {
     Scanner sc = new Scanner(System.in);
     private int playerBet;
-
     public static void main(String[] args) {
         new Blackjack();
     }
@@ -39,14 +37,12 @@ public class Blackjack {
             for (Cards card : dealerHand) {
                 System.out.println(card.getValue() + " of " + card.getSuit());
             }
-        }
-        else {
+        } else {
             System.out.println(dealerHand.get(0).getValue() + " of " + dealerHand.get(0).getSuit());
             System.out.println("Hidden Card");
         }
 
         System.out.println();
-
         playerTurn(playerHand, deck);
         dealerTurn(dealerHand, deck);
         determineWinner(playerHand, dealerHand);
@@ -79,36 +75,60 @@ public class Blackjack {
         //checks if player has blackjack
         if (getHandValue(playerHand) == 21 && playerHand.size() == 2) {
             System.out.println("Blackjack! You win!");
+            System.out.println("""
+                    ──────────────────────────────────
+                    ─██████████████─████████───██████─
+                    ─██░░░░░░░░░░██─██░░░░██───██░░██─
+                    ─██████████░░██─████░░██───██░░██─
+                    ─────────██░░██───██░░██───██░░██─
+                    ─██████████░░██───██░░██───██░░██─
+                    ─██░░░░░░░░░░██───██░░██───██░░██─
+                    ─██░░██████████───██░░██───██████─
+                    ─██░░██───────────██░░██──────────
+                    ─██░░██████████─████░░████─██████─
+                    ─██░░░░░░░░░░██─██░░░░░░██─██░░██─
+                    ─██████████████─██████████─██████─
+                    ──────────────────────────────────""");
             playerBet = playerBet * 3; //blackjack, payout 3:1
             return;
         }
 
         boolean continueHitting = true;
         while (continueHitting) {
-            System.out.println("\nWould you like to draw another card (hit), or stay with your current hand? (h/s)");
-            String hit = sc.nextLine().toLowerCase();
+            System.out.println("\nWould you like to draw another card (hit), split your hand (p), or stay with your current hand (s)? (h/s/p)");
+            String choice = sc.nextLine().toLowerCase();
 
-            if (hit.equals("h")) {
-                Cards newCard = deck.remove(0);
-                playerHand.add(newCard);
-                System.out.println("Your new card: " + newCard.getValue() + " of " + newCard.getSuit());
+            switch (choice) {
+                case "h":
+                    Cards newCard = deck.remove(0);
+                    playerHand.add(newCard);
+                    System.out.println("Your new card: " + newCard.getValue() + " of " + newCard.getSuit());
+                    System.out.println("Your hand: ");
+                    printHand(playerHand);
+                    System.out.println("Hand value: " + getHandValue(playerHand));
 
-                System.out.println("Your hand: ");
-                printHand(playerHand);
-                System.out.println("Hand value: " + getHandValue(playerHand));
-
-                if (getHandValue(playerHand) >= 21) {
+                    if (getHandValue(playerHand) >= 21) {
+                        continueHitting = false;
+                    }
+                    break;
+                case "s":
                     continueHitting = false;
-                }
-            } else {
-                continueHitting = false;
+                    break;
+                case "p":
+                    if (playerHand.size() == 2 && playerHand.get(0).getValue().equals(playerHand.get(1).getValue())) {
+                        splitHand(playerHand, deck);
+                        continueHitting = false;
+                    } else {
+                        System.out.println("You can't split this hand");
+                    }
+                    break;
             }
         }
     }
 
+    //dealers turn deals cards, continues to hit if hand value is less than 17, and busts if more than 21
     public void dealerTurn(ArrayList<Cards> dealerHand, ArrayList<Cards> deck){
         System.out.println("\nDealer's turn: ");
-
         System.out.println("Dealer's hand:");
         printHand(dealerHand);
         System.out.println("Hand value: " + getHandValue(dealerHand));
@@ -149,18 +169,22 @@ public class Blackjack {
 
         if (playerHandValue > 21) {
             System.out.println("You busted. Dealer wins!"); //bust, no payout
-        } else if (dealerHandValue > 21) {
+        }
+        else if (dealerHandValue > 21) {
             System.out.println("The dealer busted. You win!");
             payout = playerBet * 2; //payout is 1:1
             System.out.println("You won $" + payout);
-        } else if (playerHandValue == dealerHandValue) {
+        }
+        else if (playerHandValue == dealerHandValue) {
             System.out.println("It's a push!");
             System.out.println("You get back your bet amount: $" + playerBet); //player keeps bet for push
-        } else if (playerHandValue > dealerHandValue) {
+        }
+        else if (playerHandValue > dealerHandValue) {
             System.out.println("You win!");
             payout = playerBet * 2; //payout 1:1
             System.out.println("You won $" + payout);
-        } else {
+        }
+        else {
             System.out.println("Dealer wins!"); //dealer won, no payout
         }
     }
@@ -172,6 +196,7 @@ public class Blackjack {
         }
     }
 
+    //gets the numeric value of a hand
     public int getHandValue(ArrayList<Cards> hand) {
         int value = 0;
         int numAces = 0;
@@ -189,5 +214,39 @@ public class Blackjack {
             numAces--;
         }
         return value;
+    }
+
+    //splits your hand, removes the original cards from your hand, draws new cards for both hands, and adds the split hands back into the player's hand
+    public void splitHand(ArrayList<Cards> playerHand, ArrayList<Cards> deck) {
+        System.out.println("Splitting you hand");
+        Cards firstCard = playerHand.get(0);
+        Cards secondCard = playerHand.get(1);
+
+        ArrayList<Cards> hand1 = new ArrayList<>();
+        ArrayList<Cards> hand2 = new ArrayList<>();
+
+        hand1.add(firstCard);
+        hand2.add(secondCard);
+
+        playerHand.remove(firstCard);
+        playerHand.remove(secondCard);
+
+        hand1.add(deck.remove(0));
+        hand2.add(deck.remove(0));
+
+        System.out.println("\nFirst hand: ");
+        printHand(hand1);
+        System.out.println("Hand Value: " + getHandValue(hand1));
+
+        playerTurn(hand1, deck);
+
+        System.out.println("\nSecond hand: ");
+        printHand(hand2);
+        System.out.println("Hand Value: " + getHandValue(hand2));
+
+        playerTurn(hand2, deck);
+
+        playerHand.addAll(hand1);
+        playerHand.addAll(hand2);
     }
 }
